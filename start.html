@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>برنامه ۶۰ روزه جامع - سیستم پیگیری پیشرفت</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.rtl.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #6a11cb;
+            --secondary-color: #2575fc;
+            --accent-color: #ff6b6b;
+            --light-color: #f8f9fa;
+            --dark-color: #2d3436;
+            --success-color: #20bf6b;
+            --warning-color: #fa8231;
+        }
+        
+        body {
+            font-family: 'Vazirmatn', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: var(--dark-color);
+            padding-top: 20px;
+            padding-bottom: 50px;
+            min-height: 100vh;
+        }
+        
+        .container-main {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        .day-navigation {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .day-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .current-day {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .completed-day {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        .card {
+            border-radius: 15px;
+            overflow: hidden;
+            border: none;
+            margin-bottom: 20px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, var(--secondary-color) 0%, var(--primary-color) 100%);
+            color: white;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .task-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            transition: background-color 0.2s;
+        }
+        
+        .task-item:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .task-item:last-child {
+            border-bottom: none;
+        }
+        
+        .task-checkbox {
+            margin-left: 15px;
+            transform: scale(1.5);
+            cursor: pointer;
+        }
+        
+        .completed {
+            text-decoration: line-through;
+            color: #888;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 12px 25px;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(135deg, var(--secondary-color) 0%, var(--primary-color) 100%);
+        }
+        
+        .section-title {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        
+        .motivation-quote {
+            font-style: italic;
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid var(--accent-color);
+        }
+        
+        .progress-container {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .reward-section {
+            background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .punishment-section {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .data-management {
+            background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .stat-box {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin: 10px 0;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        @media (max-width: 768px) {
+            .task-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .task-checkbox {
+                margin: 10px 0;
+            }
+            
+            .day-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container container-main">
+        <div class="header">
+            <h1><i class="fas fa-calendar-check me-2"></i>برنامه ۶۰ روزه جامع</h1>
+            <p class="mb-0">سیستم پیگیری پیشرفت با قابلیت ذخیره اطلاعات</p>
+        </div>
+        
+        <div class="progress-container">
+            <h4 class="section-title">پیشرفت کلی</h4>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="stat-box">
+                        <div class="stat-number" id="completed-days">0</div>
+                        <div>روزهای completed</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-box">
+                        <div class="stat-number" id="completion-rate">0%</div>
+                        <div>میانگین completion</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-box">
+                        <div class="stat-number" id="current-streak">0</div>
+                        <div>روزهای متوالی</div>
+                    </div>
+                </div>
+            </div>
+            <div class="progress mt-3" style="height: 25px;">
+                <div class="progress-bar progress-bar-striped progress-bar-animated" 
+                     role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+        </div>
+        
+        <div class="day-navigation" id="day-navigation">
+            <!-- روزها توسط JavaScript ایجاد خواهند شد -->
+        </div>
+        
+        <div class="motivation-quote" id="daily-motivation">
+            <i class="fas fa-quote-left me-2"></i>
+            "امروز بهترین روز برای شروع تغییر است..."
+            <i class="fas fa-quote-right ms-2"></i>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-tasks me-2"></i>برنامه روزانه - <span id="current-day-text">روز 1</span>
+                    </div>
+                    <div class="card-body p-0" id="daily-tasks">
+                        <!-- tasks will be loaded by JavaScript -->
+                    </div>
+                </div>
+                
+                <div class="reward-section" id="reward-section" style="display: none;">
+                    <h4><i class="fas fa-trophy me-2"></i>تبریک! پاداش امروز را دریافت کردی</h4>
+                    <p id="reward-text">امروز عملکرد خوبی داشتید و مستحق پاداش هستید!</p>
+                    <button class="btn btn-outline-primary" id="reward-btn">دریافت پاداش</button>
+                </div>
+                
+                <div class="punishment-section" id="punishment-section" style="display: none;">
+                    <h4><i class="fas fa-exclamation-circle me-2"></i>متأسفانه امروز به هدف نرسیدی</h4>
+                    <p id="punishment-text">برای فردا بیشتر تلاش کن!</p>
+                    <button class="btn btn-outline-danger" id="punishment-btn">پذیرش مجازات</button>
+                </div>
+            </div>
+            
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-utensils me-2"></i>برنامه غذایی امروز
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group" id="meal-plan">
+                            <!-- meal plan will be loaded by JavaScript -->
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-book-open me-2"></i>منابع یادگیری امروز
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group" id="learning-resources">
+                            <!-- resources will be loaded by JavaScript -->
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-running me-2"></i>فعالیت بدنی امروز
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group" id="physical-activities">
+                            <!-- activities will be loaded by JavaScript -->
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="data-management">
+                    <h4><i class="fas fa-database me-2"></i>مدیریت اطلاعات</h4>
+                    <p>اطلاعات پیشرفت شما در مرورگر ذخیره می‌شود</p>
+                    <div class="d-flex justify-content-center gap-3 flex-wrap">
+                        <button class="btn btn-success" id="save-data-btn">
+                            <i class="fas fa-save me-2"></i>ذخیره اطلاعات
+                        </button>
+                        <button class="btn btn-info" id="load-data-btn">
+                            <i class="fas fa-download me-2"></i>بارگذاری اطلاعات
+                        </button>
+                        <button class="btn btn-warning" id="reset-data-btn">
+                            <i class="fas fa-trash-alt me-2"></i>بازنشانی اطلاعات
+                        </button>
+                        <button class="btn btn-primary" id="export-data-btn">
+                            <i class="fas fa-file-export me-2"></i>خروجی اطلاعات
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // پایگاه داده داخلی - ذخیره اطلاعات در localStorage
+            const DB_NAME = '60DayProgressDB';
+            let appData = {
+                currentDay: 1,
+                days: {},
+                stats: {
+                    completedDays: 0,
+                    completionRate: 0,
+                    currentStreak: 0,
+                    longestStreak: 0
+                }
+            };
+            
+            // مقادیر پیش‌فرض برای هر روز
+            const dailyTasks = [
+                "۷:۰۰ - بیداری و آب لیمو",
+                "۷:۱۵ - مدیتیشن ۵ دقیقه‌ای",
+                "۷:۳۰ - ورزش صبحگاهی",
+                "۸:۰۰ - صبحانه سالم",
+                "۹:۰۰ - یادگیری زبان",
+                "۱۰:۳۰ - پروژه خلاقانه",
+                "۱۲:۰۰ - ناهار سالم",
+                "۱۴:۰۰ - مطالعه درسی",
+                "۱۶:۰۰ - فعالیت بیرون از خانه",
+                "۱۸:۰۰ - یادگیری مهارت جدید",
+                "۱۹:۳۰ - شام سبک",
+                "۲۱:۰۰ - فعالیت آرامش‌بخش",
+                "۲۲:۳۰ - مطالعه آزاد",
+                "۲۳:۰۰ - آماده شدن برای خواب"
+            ];
+            
+            const mealPlans = [
+                "صبحانه: جو دوسر با موز و عسل",
+                "میان وعده: یک عدد سیب",
+                "ناهار: سالاد ماکارونی با سبزیجات",
+                "میان وعده: ماست و میوه",
+                "شام: سوپ جو با سبزیجات و نان سنگک"
+            ];
+            
+            const learningResources = [
+                "۳۰ دقیقه Duolingo (زبان انگلیسی)",
+                "تماشای یک ویدیو آموزشی برنامه‌نویسی",
+                "خواندن یک فصل از کتاب تخصصی",
+                "حل کردن چند مسئله تمرینی"
+            ];
+            
+            const physicalActivities = [
+                "۱۵ دقیقه یوگا",
+                "۳۰ دقیقه پیاده‌روی در پارک",
+                "۲۰ دقیقه تمرینات هوازی",
+                "۱۰ دقیقه حرکات کششی"
+            ];
+            
+            const motivations = [
+                "امروز بهترین روز برای شروع تغییر است.",
+                "قدم‌های کوچک اما پیوسته بردار.",
+                "پیشرفت هرچند کوچک،仍然是 پیشرفت است.",
+                "تو قوی‌تر از آنی که فکر می‌کنی هستی.",
+                "individual روزها eventually به نتایج بزرگ منجر می‌شوند."
+            ];
+            
+            // Initialize application
+            initApp();
+            
+            function initApp() {
+                loadData();
+                renderDayNavigation();
+                renderCurrentDay();
+                updateStats();
+                
+                // Event listeners
+                document.getElementById('save-data-btn').addEventListener('click', saveData);
+                document.getElementById('load-data-btn').addEventListener('click', loadData);
+                document.getElementById('reset-data-btn').addEventListener('click', resetData);
+                document.getElementById('export-data-btn').addEventListener('click', exportData);
+                document.getElementById('reward-btn').addEventListener('click', giveReward);
+                document.getElementById('punishment-btn').addEventListener('click', applyPunishment);
+            }
+            
+            function renderDayNavigation() {
+                const navigation = document.getElementById('day-navigation');
+                navigation.innerHTML = '';
+                
+                for (let day = 1; day <= 60; day++) {
+                    const button = document.createElement('button');
+                    button.className = 'btn day-btn';
+                    button.textContent = day;
+                    
+                    if (day === appData.currentDay) {
+                        button.classList.add('current-day');
+                    } else if (appData.days[day] && appData.days[day].completed) {
+                        button.classList.add('completed-day');
+                    } else {
+                        button.classList.add('btn-outline-primary');
+                    }
+                    
+                    button.addEventListener('click', () => {
+                        appData.currentDay = day;
+                        saveData();
+                        renderCurrentDay();
+                        renderDayNavigation();
+                    });
+                    
+                    navigation.appendChild(button);
+                }
+            }
+            
+            function renderCurrentDay() {
+                const day = appData.currentDay;
+                document.getElementById('current-day-text').textContent = `روز ${day}`;
+                
+                // Render tasks
+                const tasksContainer = document.getElementById('daily-tasks');
+                tasksContainer.innerHTML = '';
+                
+                dailyTasks.forEach((task, index) => {
+                    const taskItem = document.createElement('div');
+                    taskItem.className = 'task-item';
+                    
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.className = 'task-checkbox';
+                    checkbox.checked = appData.days[day] && appData.days[day].tasks && appData.days[day].tasks[index];
+                    
+                    const taskDetails = document.createElement('div');
+                    taskDetails.className = 'task-details';
+                    
+                    const taskTitle = document.createElement('h5');
+                    taskTitle.className = 'mb-1';
+                    taskTitle.textContent = task;
+                    
+                    taskDetails.appendChild(taskTitle);
+                    
+                    if (checkbox.checked) {
+                        taskDetails.classList.add('completed');
+                    }
+                    
+                    checkbox.addEventListener('change', function() {
+                        if (!appData.days[day]) {
+                            appData.days[day] = { tasks: [], completed: false };
+                        }
+                        
+                        if (!appData.days[day].tasks) {
+                            appData.days[day].tasks = [];
+                        }
+                        
+                        appData.days[day].tasks[index] = this.checked;
+                        
+                        if (this.checked) {
+                            taskDetails.classList.add('completed');
+                        } else {
+                            taskDetails.classList.remove('completed');
+                        }
+                        
+                        checkDayCompletion(day);
+                        saveData();
+                        updateStats();
+                    });
+                    
+                    taskItem.appendChild(checkbox);
+                    taskItem.appendChild(taskDetails);
+                    tasksContainer.appendChild(taskItem);
+                });
+                
+                // Render meal plan
+                const mealContainer = document.getElementById('meal-plan');
+                mealContainer.innerHTML = '';
+                
+                mealPlans.forEach(meal => {
+                    const li = document.createElement('li');
+                    li.className = 'list-group-item';
+                    li.textContent = meal;
+                    mealContainer.appendChild(li);
+                });
+                
+                // Render learning resources
+                const resourcesContainer = document.getElementById('learning-resources');
+                resourcesContainer.innerHTML = '';
+                
+                learningResources.forEach(resource => {
+                    const li = document.createElement('li');
+                    li.className = 'list-group-item';
+                    li.textContent = resource;
+                    resourcesContainer.appendChild(li);
+                });
+                
+                // Render physical activities
+                const activitiesContainer = document.getElementById('physical-activities');
+                activitiesContainer.innerHTML = '';
+                
+                physicalActivities.forEach(activity => {
+                    const li = document.createElement('li');
+                    li.className = 'list-group-item';
+                    li.textContent = activity;
+                    activitiesContainer.appendChild(li);
+                });
+                
+                // Set daily motivation
+                const motivationIndex = (day - 1) % motivations.length;
+                document.getElementById('daily-motivation').innerHTML = `
+                    <i class="fas fa-quote-left me-2"></i>
+                    "${motivations[motivationIndex]}"
+                    <i class="fas fa-quote-right ms-2"></i>
+                `;
+                
+                // Show reward/punishment if day is completed
+                if (appData.days[day] && appData.days[day].completed) {
+                    if (appData.days[day].completionRate >= 80) {
+                        document.getElementById('reward-section').style.display = 'block';
+                        document.getElementById('punishment-section').style.display = 'none';
+                        document.getElementById('reward-text').textContent = getRewardMessage(day);
+                    } else {
+                        document.getElementById('reward-section').style.display = 'none';
+                        document.getElementById('punishment-section').style.display = 'block';
+                        document.getElementById('punishment-text').textContent = getPunishmentMessage(day);
+                    }
+                } else {
+                    document.getElementById('reward-section').style.display = 'none';
+                    document.getElementById('punishment-section').style.display = 'none';
+                }
+            }
+            
+            function checkDayCompletion(day) {
+                if (!appData.days[day] || !appData.days[day].tasks) return;
+                
+                const completedTasks = appData.days[day].tasks.filter(task => task).length;
+                const completionRate = Math.round((completedTasks / dailyTasks.length) * 100);
+                
+                appData.days[day].completionRate = completionRate;
+                appData.days[day].completed = completionRate >= 70;
+                
+                if (appData.days[day].completed) {
+                    updateStreak(day);
+                }
+            }
+            
+            function updateStreak(day) {
+                // This is a simplified streak calculation
+                let streak = 0;
+                for (let d = day; d >= 1; d--) {
+                    if (appData.days[d] && appData.days[d].completed) {
+                        streak++;
+                    } else {
+                        break;
+                    }
+                }
+                
+                appData.stats.currentStreak = streak;
+                if (streak > appData.stats.longestStreak) {
+                    appData.stats.longestStreak = streak;
+                }
+            }
+            
+            function updateStats() {
+                let completedDays = 0;
+                let totalCompletion = 0;
+                
+                for (let day = 1; day <= 60; day++) {
+                    if (appData.days[day] && appData.days[day].completed) {
+                        completedDays++;
+                        totalCompletion += appData.days[day].completionRate;
+                    }
+                }
+                
+                appData.stats.completedDays = completedDays;
+                appData.stats.completionRate = completedDays > 0 ? Math.round(totalCompletion / completedDays) : 0;
+                
+                document.getElementById('completed-days').textContent = completedDays;
+                document.getElementById('completion-rate').textContent = `${appData.stats.completionRate}%`;
+                document.getElementById('current-streak').textContent = appData.stats.currentStreak;
+                
+                // Update progress bar
+                const progressBar = document.querySelector('.progress-bar');
+                const progressPercentage = Math.round((completedDays / 60) * 100);
+                progressBar.style.width = `${progressPercentage}%`;
+                progressBar.setAttribute('aria-valuenow', progressPercentage);
+            }
+            
+            function getRewardMessage(day) {
+                const rewards = [
+                    "امروز میتونی ۳۰ دقیقه بیشتر تو شبکه‌های اجتماعی وقت بگذرونی!",
+                    "حق داری یک فیلم یا سریال مورد علاقت رو تماشا کنی!",
+                    "امروز میتونی یک دسر خوشمزه بخوری!",
+                    "حق داری یک کتاب غیردرسی بخونی!",
+                    "امروز میتونی ۱ ساعت بیشتر بیدار بمونی!"
+                ];
+                
+                return rewards[(day - 1) % rewards.length];
+            }
+            
+            function getPunishmentMessage(day) {
+                const punishments = [
+                    "فردا باید ۱۵ دقیقه بیشتر ورزش کنی!",
+                    "فردا باید ۳۰ دقیقه کمتر از موبایل استفاده کنی!",
+                    "فردا باید یک صفحه انشای انگلیسی بنویسی!",
+                    "فردا باید یک کار خیر انجام بدی!",
+                    "فردا باید ۲۰ دقیقه زودتر از خواب بیدار بشی!"
+                ];
+                
+                return punishments[(day - 1) % punishments.length];
+            }
+            
+            function giveReward() {
+                alert(`پاداش اعطا شد: ${getRewardMessage(appData.currentDay)}`);
+            }
+            
+            function applyPunishment() {
+                alert(`مجازات اعمال شد: ${getPunishmentMessage(appData.currentDay)}`);
+            }
+            
+            function saveData() {
+                localStorage.setItem(DB_NAME, JSON.stringify(appData));
+                alert('اطلاعات با موفقیت ذخیره شد!');
+            }
+            
+            function loadData() {
+                const savedData = localStorage.getItem(DB_NAME);
+                if (savedData) {
+                    appData = JSON.parse(savedData);
+                    alert('اطلاعات با موفقیت بارگذاری شد!');
+                    renderDayNavigation();
+                    renderCurrentDay();
+                    updateStats();
+                } else {
+                    alert('هیچ اطلاعات ذخیره‌شده‌ای یافت نشد!');
+                }
+            }
+            
+            function resetData() {
+                if (confirm('آیا مطمئن هستید که می‌خواهید همه اطلاعات را پاک کنید؟')) {
+                    localStorage.removeItem(DB_NAME);
+                    appData = {
+                        currentDay: 1,
+                        days: {},
+                        stats: {
+                            completedDays: 0,
+                            completionRate: 0,
+                            currentStreak: 0,
+                            longestStreak: 0
+                        }
+                    };
+                    alert('همه اطلاعات بازنشانی شد!');
+                    renderDayNavigation();
+                    renderCurrentDay();
+                    updateStats();
+                }
+            }
+            
+            function exportData() {
+                const dataStr = JSON.stringify(appData);
+                const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+                
+                const exportFileDefaultName = `60day-progress-${new Date().toISOString().slice(0,10)}.json`;
+                
+                const linkElement = document.createElement('a');
+                linkElement.setAttribute('href', dataUri);
+                linkElement.setAttribute('download', exportFileDefaultName);
+                linkElement.click();
+            }
+        });
+    </script>
+</body>
+</html>
